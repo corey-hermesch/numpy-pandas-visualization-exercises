@@ -9,7 +9,7 @@ import pandas as pd
 from pydataset import data
 
 
-# In[9]:
+# In[2]:
 
 
 # Copy the code from the lesson to create a dataframe full of student grades.
@@ -33,7 +33,7 @@ df = pd.DataFrame({'name': students,
 df
 
 
-# In[12]:
+# In[3]:
 
 
 #     Create a column named passing_english that indicates whether each student has a passing grade in english.
@@ -42,7 +42,7 @@ df['passing_english'] = (df.english >= 70)
 df
 
 
-# In[21]:
+# In[4]:
 
 
 #     Sort the english grades by the passing_english column. How are duplicates handled?
@@ -51,7 +51,7 @@ df.sort_values(by = 'passing_english')
 # duplicates are orderd by the index
 
 
-# In[186]:
+# In[5]:
 
 
 #     Sort the english grades first by passing_english and then by student name. All the students that are 
@@ -66,15 +66,15 @@ df.sort_values(by = 'name').sort_values(by = 'passing_english')
 df.sort_values(by = ['passing_english','name'])
 
 
-# In[22]:
+# In[6]:
 
 
 #     Sort the english grades first by passing_english, and then by the actual english grade, similar to how 
 # we did in the last step.
-df.sort_values(by = 'passing_english' and 'english')
+df.sort_values(by = ['passing_english', 'english'])
 
 
-# In[175]:
+# In[7]:
 
 
 #     Calculate each students overall grade and add it as a column on the dataframe. The overall grade is the 
@@ -87,7 +87,7 @@ df['overall_grade'] = (df.math + df.english + df.reading) / 3
 df.head()
 
 
-# In[174]:
+# In[8]:
 
 
 # Load the mpg dataset. Read the documentation for the dataset and use it for the following questions:
@@ -95,10 +95,9 @@ df.head()
 mpg = data('mpg')
 mpg.head()
 #data('mpg', show_doc=True)
-mpg.head().info
 
 
-# In[42]:
+# In[9]:
 
 
 #     How many rows and columns are there?
@@ -106,24 +105,25 @@ mpg.head().info
 mpg.shape
 
 
-# In[58]:
+# In[10]:
 
 
 #     What are the data types of each column?
 
 mpg.dtypes
+mpg.info()
 
 
-# In[172]:
+# In[11]:
 
 
 #     Summarize the dataframe with .info and .describe
 
-print(mpg.head().info)
+print(mpg.head().info())
 mpg.describe()
 
 
-# In[66]:
+# In[12]:
 
 
 #     Rename the cty column to city.
@@ -133,7 +133,7 @@ mpg = mpg.rename(columns = {'cty': 'city'})
 mpg
 
 
-# In[67]:
+# In[13]:
 
 
 #     Rename the hwy column to highway.
@@ -142,16 +142,17 @@ mpg = mpg.rename(columns = {'hwy': 'highway'})
 mpg
 
 
-# In[171]:
+# In[14]:
 
 
 #     Do any cars have better city mileage than highway mileage?
 
 # No
 mpg[mpg.city > mpg.highway].shape
+# mpg['class'].unique()
 
 
-# In[72]:
+# In[15]:
 
 
 #     Create a column named mileage_difference this column should contain the difference between highway and 
@@ -160,32 +161,37 @@ mpg['mileage_difference'] = mpg.highway - mpg.city
 mpg
 
 
-# In[81]:
+# In[16]:
 
 
 #     Which car (or cars) has the highest mileage difference?
 
 # honda civic and vw new beetle both have a difference of 12
 mpg.sort_values(by = 'mileage_difference', ascending = False).head()
+# OR
+mpg[mpg.mileage_difference == mpg.mileage_difference.max()]
 
 
-# In[169]:
+# In[17]:
 
 
 #     Which compact class car has the lowest highway mileage? The best?
 
 print("The compact with the lowest highway mileage is the: ")
 mpg[mpg['class'] == 'compact'].sort_values(by = 'highway', ascending=False).tail(1)
+# OR
+compact_df = mpg[mpg['class'] == 'compact']
+compact_df[compact_df.highway == compact_df.highway.min()]
 
 
-# In[96]:
+# In[18]:
 
 
 print("The compact with the best highway mileage is the: ")
 mpg[mpg['class'] == 'compact'].sort_values(by = 'highway', ascending=False).head(1)
 
 
-# In[97]:
+# In[19]:
 
 
 #     Create a column named average_mileage that is the mean of the city and highway mileage.
@@ -194,7 +200,7 @@ mpg['average_mileage'] = (mpg.city + mpg.highway) / 2
 mpg
 
 
-# In[101]:
+# In[20]:
 
 
 #     Which dodge car has the best average mileage? The worst?
@@ -202,14 +208,14 @@ print("The Dodge with the best average mileage = ")
 mpg[mpg['manufacturer'] == 'dodge'].sort_values('average_mileage', ascending = False).head(1)
 
 
-# In[103]:
+# In[21]:
 
 
 print("The Dodges with the worst average mileage = ")
 mpg[mpg['manufacturer'] == 'dodge'].sort_values('average_mileage', ascending = False).tail(4)
 
 
-# In[111]:
+# In[22]:
 
 
 # Load the Mammals dataset. Read the documentation for it, and use the data to answer these questions:
@@ -219,7 +225,7 @@ mammals_df.head()
 #data('Mammals', show_doc=True)
 
 
-# In[112]:
+# In[23]:
 
 
 #     How many rows and columns are there?
@@ -227,7 +233,7 @@ mammals_df.head()
 mammals_df.shape
 
 
-# In[113]:
+# In[24]:
 
 
 #     What are the data types?
@@ -235,7 +241,7 @@ mammals_df.shape
 mammals_df.dtypes
 
 
-# In[168]:
+# In[25]:
 
 
 #     Summarize the dataframe with .info and .describe
@@ -243,7 +249,7 @@ print(mammals_df.head().info)
 mammals_df.describe()
 
 
-# In[164]:
+# In[26]:
 
 
 #     What is the the weight of the fastest animal?
@@ -254,7 +260,7 @@ mammals_df[mammals_df.speed == mammals_df.speed.max()]           # the whole row
 mammals_df.sort_values(by = 'speed', ascending=False).head(1)    # a row in df format
 
 
-# In[160]:
+# In[27]:
 
 
 #     What is the overal percentage of specials?
@@ -271,7 +277,7 @@ print("The overall percentage of 'specials' is: ")
 print (round(spcl_avg * 100, 2))
 
 
-# In[154]:
+# In[28]:
 
 
 #     How many animals are hoppers that are above the median speed? What percentage is this?

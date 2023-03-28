@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 # Pandas Exercises Part I
@@ -11,7 +11,7 @@ import numpy as np
 # from pydataset import data
 
 
-# In[2]:
+# In[3]:
 
 
 fruits = pd.Series(["kiwi", "mango", "strawberry", "pineapple"
@@ -141,7 +141,7 @@ fruits.value_counts().nsmallest(n=1, keep='all')
 # In[ ]:
 
 
-# Exercises Part 2
+###### Exercises Part 2 #########
 # Explore more attributes and methods while you continue to work with the fruits Series.
 
 
@@ -228,7 +228,7 @@ print("The answer below is wrong. See comments for explanation:")
 print(fruits[fruits.apply(len).max()])
 
 
-# In[301]:
+# In[4]:
 
 
 #     Write the code to get the string values with 5 or more letters in the name.
@@ -239,6 +239,8 @@ def count_letters(s):
 fruits[fruits.apply(count_letters) > 5]
 # OR (easier way)
 fruits[fruits.apply(len) > 5]
+# OR
+fruits[fruits.str.len() > 5]
 
 
 # In[330]:
@@ -284,7 +286,7 @@ print("Another way using string vectorization and boolean mask")
 print(fruits[fruits.str.count('apple') >= 1])
 
 
-# In[117]:
+# In[5]:
 
 
 #     Which string value contains the most vowels?
@@ -298,6 +300,9 @@ def count_vowels(s):
 
 print("The fruit that contains the most vowels = ")
 fruits[fruits.apply(count_vowels).max()]
+# Above only prints the string, though
+# The code below will return the series "5    honeycrisp apple"
+fruits[fruits.apply(count_vowels) == fruits.apply(count_vowels).max()]
 
 
 # In[333]:

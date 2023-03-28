@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 # Pandas Exercises Part I
@@ -11,7 +11,7 @@ import numpy as np
 # from pydataset import data
 
 
-# In[3]:
+# In[2]:
 
 
 fruits = pd.Series(["kiwi", "mango", "strawberry", "pineapple"
@@ -111,7 +111,7 @@ print("The number of each unique value in fruits and their count = ")
 print(fruits.value_counts())
 
 
-# In[270]:
+# In[11]:
 
 
 #9. Determine the string value that occurs most frequently in fruits
@@ -123,7 +123,7 @@ print(f"with {fruits.describe().freq} occurrences")
 fruits.value_counts().nlargest(n=1,keep='all')
 
 
-# In[271]:
+# In[12]:
 
 
 #10. Determine the string value that occurs least frequently in fruits
@@ -138,14 +138,14 @@ print(fruits.value_counts()[fruits.value_counts() == fruits.value_counts().min()
 fruits.value_counts().nsmallest(n=1, keep='all')
 
 
-# In[ ]:
+# In[13]:
 
 
 ###### Exercises Part 2 #########
 # Explore more attributes and methods while you continue to work with the fruits Series.
 
 
-# In[272]:
+# In[14]:
 
 
 #     Capitalize all the string values in fruits.
@@ -156,7 +156,7 @@ print("capitalized fruits = ")
 print(cap_fruits)
 
 
-# In[29]:
+# In[15]:
 
 
 #     Count the letter "a" in all the string values (use string vectorization).
@@ -167,7 +167,7 @@ print ("The number of 'a's in all of the values in fruits = ")
 print (a_sum)
 
 
-# In[293]:
+# In[16]:
 
 
 #     Output the number of vowels in each and every string value.
@@ -203,7 +203,7 @@ print ("Here is a DataFrame with the voel counts of each element:")
 print(fruits_df)
 
 
-# In[299]:
+# In[17]:
 
 
 #     Write the code to get the longest string value from fruits.
@@ -228,7 +228,7 @@ print("The answer below is wrong. See comments for explanation:")
 print(fruits[fruits.apply(len).max()])
 
 
-# In[4]:
+# In[18]:
 
 
 #     Write the code to get the string values with 5 or more letters in the name.
@@ -243,7 +243,7 @@ fruits[fruits.apply(len) > 5]
 fruits[fruits.str.len() > 5]
 
 
-# In[330]:
+# In[19]:
 
 
 #     Find the fruit(s) containing the letter "o" two or more times.
@@ -259,7 +259,7 @@ print("An easier way using string vectorization and boolean mask: ")
 fruits[fruits.str.count('o') >= 2]
 
 
-# In[331]:
+# In[20]:
 
 
 #     Write the code to get only the string values containing the substring "berry".
@@ -272,7 +272,7 @@ print("An easier way using string vectorization and boolean mask:")
 print(fruits[fruits.str.count('berry') >= 1])
 
 
-# In[332]:
+# In[21]:
 
 
 #     Write the code to get only the string values containing the substring "apple".
@@ -286,7 +286,7 @@ print("Another way using string vectorization and boolean mask")
 print(fruits[fruits.str.count('apple') >= 1])
 
 
-# In[5]:
+# In[22]:
 
 
 #     Which string value contains the most vowels?
@@ -305,10 +305,11 @@ fruits[fruits.apply(count_vowels).max()]
 fruits[fruits.apply(count_vowels) == fruits.apply(count_vowels).max()]
 
 
-# In[333]:
+# In[23]:
 
 
-# Exercises Part 3
+####### Exercises Part 3 #########
+
 # Use pandas to create a Series named letters from the following string. The easiest way to make this string 
 # into a Pandas series is to use list to convert each individual letter into a single string on a basic Python list.
 
@@ -317,7 +318,7 @@ letters = pd.Series(letters)
 letters
 
 
-# In[147]:
+# In[50]:
 
 
 #     Which letter occurs the most frequently in the letters Series?
@@ -326,9 +327,13 @@ print("The letter that occurs most frequently = ")
 print(letters.describe().top)
 print("and it occurs this many times")
 print(letters.describe().freq)
+# OR
+print(letters.value_counts().head(1))
+# OR
+print(letters.value_counts().idxmax())
 
 
-# In[157]:
+# In[52]:
 
 
 #     Which letter occurs the Least frequently?
@@ -338,9 +343,11 @@ print("The letter that occurs the least frequently = ")
 print(letters[letters.value_counts().min()])
 print("and it occurs this many times")
 print(letters.value_counts().min())
+# OR
+print(letters.value_counts().nsmallest(1))
 
 
-# In[161]:
+# In[54]:
 
 
 #     How many vowels are in the Series?
@@ -348,9 +355,10 @@ print(letters.value_counts().min())
 print("The number of vowels in the series = ")
 # use count_vowels function defined above
 print(sum(letters.apply(count_vowels)))
+print(letters.apply(count_vowels).sum())
 
 
-# In[163]:
+# In[55]:
 
 
 #     How many consonants are in the Series?
@@ -364,9 +372,12 @@ def count_consonants(s):
 
 print("The number of consonants in the series = ")
 print(sum(letters.apply(count_consonants)))
+# The following uses the bitwise operator for not: '~'
+# It doesn't work because I wasn't returning True or False; I was returning a count
+print((~letters.apply(count_vowels)).sum())
 
 
-# In[165]:
+# In[28]:
 
 
 #     Create a Series that has all of the same letters but uppercased.
@@ -375,7 +386,7 @@ cap_letters = letters.str.upper()
 cap_letters
 
 
-# In[334]:
+# In[56]:
 
 
 #     Create a bar plot of the frequencies of the 6 most commonly occuring letters.
@@ -383,9 +394,11 @@ import matplotlib.pyplot as plt
 
 print(letters.value_counts())
 letters.value_counts().head(6).plot()
+# OR
+letters.value_counts().head(6).plot(kind='bar')
 
 
-# In[335]:
+# In[65]:
 
 
 # use pandas to create a Series named numbers from the following list
@@ -393,7 +406,7 @@ letters.value_counts().head(6).plot()
 numbers = pd.Series(['$796,459.41', '$278.60', '$482,571.67', '$4,503,915.98', '$2,121,418.3', '$1,260,813.3', '$87,231.01', '$1,509,175.45', '$4,138,548.00', '$2,848,913.80', '$594,715.39', '$4,789,988.17', '$4,513,644.5', '$3,191,059.97', '$1,758,712.24', '$4,338,283.54', '$4,738,303.38', '$2,791,759.67', '$769,681.94', '$452,650.23'])
 
 
-# In[336]:
+# In[31]:
 
 
 #     What is the data type of the numbers Series?
@@ -404,7 +417,7 @@ print(numbers.describe())
 print(type(numbers))
 
 
-# In[337]:
+# In[32]:
 
 
 #     How many elements are in the number Series?
@@ -413,23 +426,34 @@ print("The number of elemnts in the number Series = ")
 print(numbers.size)
 
 
-# In[203]:
+# In[69]:
 
 
 # Perform the necessary manipulations by accessing Series attributes and methods to convert the numbers 
 # Series to a numeric data type.
 
+# test
 numbers[0].replace('$','').replace(',','')
-float_numbers = []
-for number in numbers:
-    float_numbers.append(float((number.replace('$','')).replace(',','')))
-float_numbers = pd.Series(float_numbers)
+
+# better way than below
+float_numbers = numbers.str.replace('$','',regex=True).str.replace(',','',regex=True)
+float_numbers
+
+# OR
+
+# float_numbers = numbers.str.replace(['$,','']) # this isn't quite right
+
+# code to answer question
+# float_numbers = []
+# for number in numbers:
+#     float_numbers.append(float((number.replace('$','')).replace(',','')))
+# float_numbers = pd.Series(float_numbers)
 
 
-#print(float_numbers)
+# print(float_numbers)
 
 
-# In[204]:
+# In[34]:
 
 
 #     Run the code to discover the maximum value from the Series.
@@ -438,7 +462,7 @@ print("The maximum value from the numbers series = ")
 print(float_numbers.max())
 
 
-# In[205]:
+# In[35]:
 
 
 #     Run the code to discover the minimum value from the Series.
@@ -447,7 +471,7 @@ print("The minimum value from the numbers series = ")
 print(float_numbers.min())
 
 
-# In[212]:
+# In[36]:
 
 
 #     What is the range of the values in the Series?
@@ -458,7 +482,7 @@ print("to")
 print(float_numbers.sort_values().max())
 
 
-# In[216]:
+# In[37]:
 
 
 #     Bin the data into 4 equally sized intervals or bins and output how many values fall into each bin.
@@ -467,22 +491,25 @@ bin_series = pd.cut(float_numbers, 4)
 print(bin_series.value_counts())
 
 
-# In[227]:
+# In[38]:
 
 
 #     Plot the binned data in a meaningful way. Be sure to include a title and axis labels.
 
-b_s_vc = bin_series.value_counts().sort_values(ascending = False)
+b_s_vc = bin_series.value_counts().sort_values(ascending = False) # or sort_index()
 
 
-# In[229]:
+# In[39]:
 
 
 b_s_vc.plot.bar(title = 'Number of elements in 4 equally ranged bins',
                ).set(xlabel='Values', ylabel = 'Frequency')
 
+# use matplotlib stuff plt.title ... then plt.show
+# that will get rid of the line at the top [Text(0.5), ...
 
-# In[249]:
+
+# In[40]:
 
 
 # Use pandas to create a Series named exam_scores from the following list:
@@ -490,7 +517,7 @@ b_s_vc.plot.bar(title = 'Number of elements in 4 equally ranged bins',
 exam_scores = pd.Series([60, 86, 75, 62, 93, 71, 60, 83, 95, 78, 65, 72, 69, 81, 96, 80, 85, 92, 82, 78])
 
 
-# In[231]:
+# In[41]:
 
 
 #     How many elements are in the exam_scores Series?
@@ -499,7 +526,7 @@ print("The number of elements in the exam_scores Series = ")
 print(exam_scores.size)
 
 
-# In[235]:
+# In[42]:
 
 
 #     Run the code to discover the minimum, the maximum, the mean, and the median scores for the exam_scores Series.
@@ -509,17 +536,20 @@ print(exam_scores.describe())
 print(f"median   {exam_scores.median()}")
 
 
-# In[245]:
+# In[71]:
 
 
 #     Plot the Series in a meaningful way and make sure your chart has a title and axis labels.
 
 bin_exams = pd.cut(exam_scores,[0,60,70,80,90,100])
 
+# below doesn't work:
+# bin_exams = pd.cut(exam_scores,[100, 90, 80, 70, 60, 0])
+
 bin_exams.value_counts(sort=False).plot.bar(title="Exam Scores, F-A").set(xlabel="Exam Scores", ylabel="Frequency")
 
 
-# In[252]:
+# In[44]:
 
 
 #     Write the code necessary to implement a curve for your exam_grades Series and save this as curved_grades. 
@@ -530,7 +560,7 @@ curve_value = 100 - exam_scores.max()
 curved_grades = exam_scores + curve_value
 
 
-# In[268]:
+# In[45]:
 
 
 #     Use a method to convert each of the numeric values in the curved_grades Series into a categorical value 
@@ -547,7 +577,7 @@ def get_letter_grade(score):
 letter_grades = curved_grades.apply(get_letter_grade)
 
 
-# In[269]:
+# In[46]:
 
 
 #     Plot your new categorical letter_grades Series in a meaninful way and include a title and axis labels.

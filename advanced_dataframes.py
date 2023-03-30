@@ -4,7 +4,7 @@
 # In[1]:
 
 
-# advanced_dataframes_exercises
+# advanced_dataframes exercises
 
 
 # In[1]:
@@ -129,12 +129,12 @@ LIMIT 100
 pd.read_sql(error_query, connection_string)
 
 
-# In[12]:
+# In[86]:
 
 
 # Read the employees and titles tables into two separate DataFrames.
 
-employees_db_connect_string = get_db_url(user, host, password, 'employees')
+employees_db_connect_string = get_db_url('employees')
 employees_query = '''
     SELECT *
     FROM employees
@@ -407,7 +407,7 @@ mpg
 # is_auto_df
 # mpg = pd.concat([mpg, is_auto_df], axis=1)
 
-# is_auto_df has an index that starts with 0 which messes this up
+#### is_auto_df has an index that starts with 0 which messes this up ####
 
 # This works:
 mpg.trans.value_counts()
@@ -451,6 +451,191 @@ mpg.groupby('manufacturer').model.count()
 
 is_auto_mask = np.where(mpg.trans.str.contains('auto'), True, False)
 mpg[is_auto_mask]
+
+
+# In[ ]:
+
+
+######## Exercises Part 3 ########
+
+
+# In[4]:
+
+
+#     Use your get_db_url function to help you explore the data from the chipotle database.
+
+connection_string = get_db_url('chipotle')
+query = """
+    SELECT *
+    FROM orders
+"""
+
+
+# In[140]:
+
+
+orders = pd.read_sql(query, connection_string)
+
+
+# In[141]:
+
+
+orders_df = orders
+orders_df.head()
+
+
+# In[142]:
+
+
+#     What is the total price for each order?
+
+# def get_money_float(s):
+#     s = s.strip('$ ')
+#     return round(float(s),2)
+
+# item_price_float = orders_df.item_price.apply(get_money_float)
+# orders_df = orders_df.drop(columns = ['item_price'])
+# orders_df.head()
+
+# OR 
+orders_df.item_price = orders_df.item_price.str.strip('$').astype(float)
+# that would have been so much easier
+
+
+# In[144]:
+
+
+orders_df
+orders_df.info()
+
+
+# In[145]:
+
+
+order_total_price = pd.DataFrame(orders_df.groupby('order_id').item_price.sum())
+order_total_price.head()
+
+
+# In[139]:
+
+
+#     What are the most popular 3 items?
+
+orders_df.head()
+orders_df.groupby('item_name').quantity.sum().sort_values(ascending=False).head(3)
+
+
+# In[147]:
+
+
+#     Which item has produced the most revenue?
+
+# turns out item_price was not price per, for example, chicken bowl; item_price was the price
+# for 1 item which may have included 2 chicken bowls
+
+orders_df.groupby(['item_name']).item_price.sum().sort_values(ascending=False).head(1)
+
+
+# In[84]:
+
+
+#     Join the employees and titles DataFrames together.
+
+employees_db_connect_string = get_db_url('employees')
+employees_query = '''
+    SELECT *
+    FROM employees
+'''
+titles_query = '''
+    SELECT *
+    FROM titles
+'''
+
+
+# In[85]:
+
+
+employees_df = pd.read_sql(employees_query, employees_db_connect_string)
+
+
+# In[87]:
+
+
+titles_df = pd.read_sql(titles_query, employees_db_connect_string)
+
+
+# In[88]:
+
+
+employees_df.head()
+
+
+# In[89]:
+
+
+titles_df.head()
+
+
+# In[136]:
+
+
+emp_titles_df = pd.merge(employees_df, titles_df, how='inner', on='emp_no')
+emp_titles_df.head()
+
+
+# In[138]:
+
+
+#     For each title, find the hire date of the employee that was hired most recently with that title.
+
+hire_date_max_df = pd.DataFrame(emp_titles_df.groupby(['title']).hire_date.max())
+hire_date_max_df
+
+# Now, how do I get their names? Will come back
+
+
+# In[127]:
+
+
+emp_titles_df[['title','hire_date']] == hire_date_max_df
+#mask = np.where()
+#emp_titles_df[['title','first_name','last_name','hire_date']].groupby(['title']).hire_date.max()
+
+
+# In[95]:
+
+
+#     Write the code necessary to create a cross tabulation of the number of titles by department. 
+# (Hint: this will involve a combination of SQL code to pull the necessary data and python/pandas code 
+# to perform the manipulations.)
+
+title_dept_query = '''
+SELECT DISTINCT(title), dept_name
+FROM titles
+	JOIN dept_emp USING(emp_no)
+    JOIN departments USING(dept_no)
+'''
+
+title_dept_df = pd.read_sql(title_dept_query, employees_db_connect_string)
+
+
+# In[96]:
+
+
+title_dept_df.head()
+
+
+# In[98]:
+
+
+pd.crosstab(title_dept_df.dept_name, title_dept_df.title, margins = True)
+
+
+# In[99]:
+
+
+#Another way
+title_dept_df.groupby('dept_name').title.nunique()
 
 
 # In[ ]:
